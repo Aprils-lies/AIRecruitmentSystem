@@ -1,0 +1,106 @@
+syntax = "proto3";
+package application;
+option go_package = "logic-grpc-service/proto/gen/application";
+
+message ApplyReq {
+    int64 position_id  = 1;
+    int64 candidate_id = 2;
+    int64 resume_id    = 3;
+}
+message ApplyResp {
+    int64  application_id = 1;
+    string message        = 2;
+}
+
+message CandidateBrief {
+    int64  user_id         = 1;
+    string username        = 2;
+    string real_name       = 3;
+    string phone           = 4;
+    string education       = 5;
+    string school          = 6;
+    string skills          = 7;
+    int64  resume_id       = 8;
+    string resume_name     = 9;
+    string applied_at      = 10;
+    string status          = 11;
+    int64  application_id  = 12;
+}
+
+message ListCandidatesReq {
+    int64 position_id = 1;
+    int64 hr_id       = 2;
+    int32 page        = 3;
+    int32 page_size   = 4;
+}
+message ListCandidatesResp {
+    repeated CandidateBrief candidates = 1;
+    int32 total  = 2;
+    int32 page   = 3;
+}
+
+message GetCandidateDetailReq {
+    int64 candidate_id    = 1;
+    int64 hr_id           = 2;
+    int64 application_id  = 3;
+}
+message GetCandidateDetailResp {
+    int64  user_id     = 1;
+    string username    = 2;
+    string real_name   = 3;
+    string phone       = 4;
+    string education   = 5;
+    string school      = 6;
+    string experience  = 7;
+    string skills      = 8;
+    int64  resume_id   = 9;
+    string resume_name = 10;
+    string resume_type = 11;
+    string applied_at  = 12;
+}
+
+message ListMyApplicationsReq {
+    int64 candidate_id = 1;
+    int32 page         = 2;
+    int32 page_size    = 3;
+}
+message MyApplication {
+    int64  application_id = 1;
+    int64  position_id    = 2;
+    string position_title = 3;
+    string status         = 4;
+    string applied_at     = 5;
+}
+message ListMyApplicationsResp {
+    repeated MyApplication applications = 1;
+    int32 total  = 2;
+    int32 page   = 3;
+}
+
+message WithdrawApplicationReq {
+    int64 application_id = 1;
+    int64 candidate_id   = 2;
+}
+message WithdrawApplicationResp {
+    bool   success = 1;
+    string message = 2;
+}
+
+message UpdateApplicationStatusReq {
+    int64 application_id = 1;
+    int64 hr_id = 2;
+    string new_status = 3;
+}
+message UpdateApplicationStatusResp {
+    bool   success = 1;
+    string message = 2;
+}
+
+service ApplicationService {
+    rpc Apply(ApplyReq) returns (ApplyResp);
+    rpc ListCandidates(ListCandidatesReq) returns (ListCandidatesResp);
+    rpc GetCandidateDetail(GetCandidateDetailReq) returns (GetCandidateDetailResp);
+    rpc ListMyApplications(ListMyApplicationsReq) returns (ListMyApplicationsResp);
+    rpc WithdrawApplication(WithdrawApplicationReq) returns (WithdrawApplicationResp);
+    rpc UpdateApplicationStatus(UpdateApplicationStatusReq) returns (UpdateApplicationStatusResp);
+}

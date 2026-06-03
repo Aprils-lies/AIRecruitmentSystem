@@ -1,0 +1,39 @@
+syntax = "proto3";
+package auth;
+option go_package = "logic-grpc-service/proto/gen/auth";
+
+message RegisterReq {
+    string username = 1;
+    string password = 2;
+    string role     = 3; // "hr" | "candidate"
+}
+message RegisterResp {
+    int64  user_id = 1;
+    string message = 2;
+}
+
+message LoginReq {
+    string username = 1;
+    string password = 2;
+}
+message LoginResp {
+    string token    = 1;
+    int64  user_id  = 2;
+    string role     = 3;
+    string username = 4;
+}
+
+message VerifyTokenReq {
+    string token = 1;
+}
+message VerifyTokenResp {
+    bool   valid   = 1;
+    int64  user_id = 2;
+    string role    = 3;
+}
+
+service AuthService {
+    rpc Register(RegisterReq) returns (RegisterResp);
+    rpc Login(LoginReq) returns (LoginResp);
+    rpc VerifyToken(VerifyTokenReq) returns (VerifyTokenResp);
+}

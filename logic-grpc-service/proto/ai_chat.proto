@@ -1,0 +1,87 @@
+syntax = "proto3";
+package ai_chat;
+option go_package = "./proto/gen/ai_chat";
+
+message ChatReq {
+    int64  hr_id      = 1;
+    string question   = 2;
+    string session_id = 3;
+}
+message ChatResp {
+    string answer     = 1;
+    int64  message_id = 2;
+    string session_id = 3;
+}
+
+message HistoryItem {
+    int64  id         = 1;
+    string session_id = 2;
+    string role       = 3;
+    string content    = 4;
+    string created_at = 5;
+}
+
+message GetHistoryReq {
+    int64  hr_id      = 1;
+    string session_id = 2;
+    int32  limit      = 3;
+    int32  offset     = 4;
+}
+message GetHistoryResp {
+    repeated HistoryItem items = 1;
+    int32 total = 2;
+}
+
+message ListSessionsReq {
+    int64 hr_id = 1;
+}
+message SessionInfo {
+    string session_id   = 1;
+    string last_message = 2;
+    string created_at   = 3;
+}
+message ListSessionsResp {
+    repeated SessionInfo sessions = 1;
+}
+
+message GetStatsReq {
+    int64 hr_id = 1;
+}
+message GetStatsResp {
+    string summary = 1;
+}
+
+message DeleteSessionReq {
+    int64  hr_id      = 1;
+    string session_id = 2;
+}
+message DeleteSessionResp {
+    bool   success = 1;
+    string message = 2;
+}
+
+message DeleteMessageReq {
+    int64 hr_id      = 1;
+    int64 message_id = 2;
+}
+message DeleteMessageResp {
+    bool   success = 1;
+    string message = 2;
+}
+
+service AIChatService {
+    rpc Chat(ChatReq) returns (ChatResp);
+    rpc ChatStream(ChatReq) returns (stream ChatStreamResp);
+    rpc GetHistory(GetHistoryReq) returns (GetHistoryResp);
+    rpc ListSessions(ListSessionsReq) returns (ListSessionsResp);
+    rpc GetStats(GetStatsReq) returns (GetStatsResp);
+    rpc DeleteSession(DeleteSessionReq) returns (DeleteSessionResp);
+    rpc DeleteMessage(DeleteMessageReq) returns (DeleteMessageResp);
+}
+
+message ChatStreamResp {
+    string chunk        = 1;
+    bool   done         = 2;
+    int64  message_id   = 3;
+    string session_id   = 4;
+}

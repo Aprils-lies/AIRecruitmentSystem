@@ -1,0 +1,106 @@
+syntax = "proto3";
+package position;
+option go_package = "web-gin-service/proto/gen/position";
+
+import "common.proto";
+
+message PositionInfo {
+    int64  id           = 1;
+    int64  hr_id        = 2;
+    string title        = 3;
+    string description  = 4;
+    string requirements = 5;
+    int32  salary_min   = 6;
+    int32  salary_max   = 7;
+    string location     = 8;
+    string status       = 9;
+    string created_at   = 10;
+    string updated_at   = 11;
+}
+
+message CreatePositionReq {
+    int64  hr_id        = 1;
+    string title        = 2;
+    string description  = 3;
+    string requirements = 4;
+    int32  salary_min   = 5;
+    int32  salary_max   = 6;
+    string location     = 7;
+}
+message CreatePositionResp {
+    int64  position_id = 1;
+    string message     = 2;
+}
+
+message UpdatePositionReq {
+    int64  position_id  = 1;
+    int64  hr_id        = 2;
+    string title        = 3;
+    string description  = 4;
+    string requirements = 5;
+    int32  salary_min   = 6;
+    int32  salary_max   = 7;
+    string location     = 8;
+}
+message UpdatePositionResp {
+    bool   success = 1;
+    string message = 2;
+}
+
+message OfflinePositionReq {
+    int64 position_id = 1;
+    int64 hr_id       = 2;
+}
+message OfflinePositionResp {
+    bool   success = 1;
+    string message = 2;
+}
+
+message OnlinePositionReq {
+    int64 position_id = 1;
+    int64 hr_id       = 2;
+}
+message OnlinePositionResp {
+    bool   success = 1;
+    string message = 2;
+}
+
+message ListPositionsReq {
+    int32  page      = 1;
+    int32  page_size = 2;
+    string keyword   = 3;
+    string location  = 4;
+}
+message ListPositionsResp {
+    repeated PositionInfo positions = 1;
+    int32  total   = 2;
+    int32  page    = 3;
+}
+
+message GetPositionReq {
+    int64 position_id = 1;
+}
+message GetPositionResp {
+    PositionInfo position = 1;
+}
+
+message ListMyPositionsReq {
+    int64 hr_id     = 1;
+    int32 page      = 2;
+    int32 page_size = 3;
+}
+message ListMyPositionsResp {
+    repeated PositionInfo positions = 1;
+    int32  total   = 2;
+    int32  page    = 3;
+}
+
+service PositionService {
+    rpc CreatePosition(CreatePositionReq) returns (CreatePositionResp);
+    rpc UpdatePosition(UpdatePositionReq) returns (UpdatePositionResp);
+    rpc OfflinePosition(OfflinePositionReq) returns (OfflinePositionResp);
+    rpc OnlinePosition(OnlinePositionReq) returns (OnlinePositionResp);
+    rpc ListPositions(ListPositionsReq) returns (ListPositionsResp);
+    rpc GetPosition(GetPositionReq) returns (GetPositionResp);
+    rpc ListMyPositions(ListMyPositionsReq) returns (ListMyPositionsResp);
+}

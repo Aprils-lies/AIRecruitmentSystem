@@ -1,0 +1,69 @@
+syntax = "proto3";
+package resume;
+option go_package = "logic-grpc-service/proto/gen/resume";
+
+message GetUploadSignURLReq {
+    int64  candidate_id = 1;
+    string file_name    = 2;
+    string content_type = 3;
+}
+message GetUploadSignURLResp {
+    string upload_url = 1;
+    string oss_key    = 2;
+    int64  expire_sec = 3;
+}
+
+message ConfirmUploadReq {
+    int64  candidate_id = 1;
+    string oss_key      = 2;
+    string file_name    = 3;
+    string file_type    = 4;
+    int64  file_size    = 5;
+}
+message ConfirmUploadResp {
+    int64  resume_id = 1;
+    string message   = 2;
+}
+
+message GetDownloadSignURLReq {
+    int64  resume_id    = 1;
+    int64  requester_id = 2;
+    string role         = 3;
+}
+message GetDownloadSignURLResp {
+    string download_url = 1;
+    string file_name    = 2;
+    int64  expire_sec   = 3;
+}
+
+message ResumeInfo {
+    int64   id          = 1;
+    string  file_name   = 2;
+    string  file_type   = 3;
+    int64   file_size   = 4;
+    string  uploaded_at = 5;
+}
+
+message ListMyResumesReq {
+    int64 candidate_id = 1;
+}
+message ListMyResumesResp {
+    repeated ResumeInfo resumes = 1;
+}
+
+message DeleteResumeReq {
+    int64 resume_id     = 1;
+    int64 candidate_id  = 2;
+}
+message DeleteResumeResp {
+    bool   success = 1;
+    string message = 2;
+}
+
+service ResumeService {
+    rpc GetUploadSignURL(GetUploadSignURLReq) returns (GetUploadSignURLResp);
+    rpc ConfirmUpload(ConfirmUploadReq) returns (ConfirmUploadResp);
+    rpc GetDownloadSignURL(GetDownloadSignURLReq) returns (GetDownloadSignURLResp);
+    rpc ListMyResumes(ListMyResumesReq) returns (ListMyResumesResp);
+    rpc DeleteResume(DeleteResumeReq) returns (DeleteResumeResp);
+}
